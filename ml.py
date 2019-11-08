@@ -4,8 +4,8 @@ class Layer:
   def __init__(self, size, previous_size):
     self.size = size
     self.previous_size = previous_size
-    self.weights = np.zeros((size, previous_size))
-    self.biases = np.zeros((size,1))
+    self.weights = np.ones((size, previous_size))
+    self.biases = np.ones((size,1))
     self.values = np.zeros((size,1))
 
 def sigmoid(x):
@@ -20,19 +20,24 @@ def output(layers):
 	steps = len(layers)
 	for i in range(1, steps):
 		next_layer(layers[i-1], layers[i])
-	return output_layer.values
+	return layers[steps-1].values
+
+def create_layers(input_values, format):
+  layers = []
+  input_layer = Layer(len(input_values), 0)
+  for i in range(len(input_values)):
+    input_layer.values[i][0] = input_values[i]
+  layers.append(input_layer)
+  for i in range(1, len(format)):
+    new_layer = Layer(format[i], format[i-1])
+    layers.append(new_layer)
+  return layers
+
+
+print(output(create_layers([1, 1], [2, 2, 2])))
 	
 
-input_layer = Layer(2, 0)
-input_layer.values = np.array([[1], [1]])
 
-layer1 = Layer(2, 2)
-
-output_layer = Layer(2, 2)
-
-layers = [input_layer, layer1, output_layer]
-
-print(output(layers))
 
 
 
