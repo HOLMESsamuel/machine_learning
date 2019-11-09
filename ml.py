@@ -13,7 +13,8 @@ def sigmoid(x):
 
 
 def next_layer(previous_layer, current_layer):
-	current_layer.values = np.add(np.dot(current_layer.weights, previous_layer.values), current_layer.biases)
+  current_layer.values = np.add(np.dot(current_layer.weights, previous_layer.values), current_layer.biases)
+  current_layer.values = sigmoid(current_layer.values)
 
 
 def output(layers):
@@ -34,7 +35,7 @@ def create_layers(input_values, format):
   return layers
 
 
-print(output(create_layers([1, 1], [2, 2, 2])))
+print(output(create_layers([1, 1], [2, 2, 1])))
 	
 
 
