@@ -40,11 +40,16 @@ def output(input, network):
     next_layer(network.layers[i-1], network.layers[i])
   return network.layers[steps-1].values
 
+def error(input, network, wanted_output):
+  output_result = output(input, network)
+  errors = np.subtract(wanted_output, output_result)
+  return errors
+
   
 
 network = Neural_network([2, 2, 1])
 
-print(output([1, 1], network))
+print(error([1, 1], network, [[0]]))
 	
 
 
