@@ -44,7 +44,17 @@ def output(input, network):
 
 network = Neural_network([2, 2, 1])
 
+network.layers[1].weights = np.array([[20, -20], [-20, 20]])
+network.layers[1].biases = np.array([[-10], [30]])
+
+network.layers[2].weights = np.array([[20, 20]])
+network.layers[2].biases = np.array([[-30]])
+
+print(output([0, 1], network))
+print(output([1, 0], network))
+print(output([0, 0], network))
 print(output([1, 1], network))
+
 	
 
 
