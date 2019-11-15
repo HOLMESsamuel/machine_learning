@@ -41,15 +41,22 @@ def output(input, network):
   return network.layers[steps-1].values
 
 def error(input, network, wanted_output):
+  errors = []
   output_result = output(input, network)
-  errors = np.subtract(wanted_output, output_result)
+  error = np.subtract(output_result, wanted_output)
+  errors.append(error)
+  for i in range(1, len(network.layers)-1):
+    error = np.dot(network.layers[len(network.layers)-i].weights.transpose(), error)
+    errors.append(error)
   return errors
 
   
 
 network = Neural_network([2, 2, 1])
 
-print(error([1, 1], network, [[0]]))
+print(output([1, 1], network))
+
+print(error([1, 1], network, [[1]]))
 	
 
 
