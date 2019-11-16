@@ -4,7 +4,7 @@ def sigmoid(x):
 	return (1/(1+np.exp(-x)))
 
 def d_sigmoid(x):
-  return x
+  return x*(1-x)
 
 class Layer:
   def __init__(self, size, previous_size):
@@ -63,24 +63,30 @@ def error(input, network, wanted_output):
   return errors
 
 def delta(input, network, wanted_output):
-  fed_network = feedforward(input, network)
   errors = error(input, network, wanted_output)
-  for i in range(len(network.layers), 1, -1):
-    gradients = network.learning_rate * np.dot(d_sigmoid(fed_network[i-1]), errors[i-2])
-    print(gradients)
+  fed_layers = feedforward(input, network)
+  fed_layers.reverse()
+  tab_deltas = []
+  for i in range(len(network.layers)-1):
+    gradients = network.learning_rate * np.multiply(errors[i], d_sigmoid(fed_layers[i].values))
+    deltas = np.dot(gradients, fed_layers[i+1].values.transpose())
+    tab_deltas.append(deltas)
+  return tab_deltas
 
 def train(input, network, wanted_output):
+  tab_deltas = delta(input, network, wanted_output)
   return "ok"
-
   
 
 network = Neural_network([2, 2, 1])
 
 #print(output([1, 1], network))
 
+
 #print(error([1, 1], network, [[1]]))
 
-delta([1, 1], network, [[1]])
+
+print(delta([1, 1], network, [[1]]))
 	
 
 
