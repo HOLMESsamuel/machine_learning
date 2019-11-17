@@ -25,12 +25,16 @@ class Neural_network:
       new_layer = Layer(dimensions[i], dimensions[i-1])
       layers.append(new_layer)
     self.layers = layers
+  
+  def display(self):
+    for i in range(len(self.layers)):
+      print(self.layers[i].weights, self.layers[i].values)
+
 
 
 
 def enter_input(network, input_values):
-  for i in range(len(input_values)):
-    network.layers[0].values[i][0] = input_values[i]
+    network.layers[0].values = input_values
 
 
 def next_layer(previous_layer, current_layer):
@@ -51,7 +55,7 @@ def output(input, network):
   enter_input(network, input)
   for i in range(1, steps):
     next_layer(network.layers[i-1], network.layers[i])
-  return network.layers[steps-1].values
+  return network.layers[-1].values
 
 def error(input, network, wanted_output):
   errors = []
@@ -74,39 +78,38 @@ def delta(input, network, wanted_output):
     biases_deltas.append(gradients)
     deltas = np.dot(gradients, fed_layers[i+1].values.transpose())
     weight_deltas.append(deltas)
+  fed_layers.reverse()
   return [weight_deltas, biases_deltas]
 
 def train(input, network, wanted_output):
   deltas = delta(input, network, wanted_output)
   weight_deltas, biases_deltas = deltas[0], deltas[1]
+  weight_deltas.reverse()
+  biases_deltas.reverse()
   for i in range(len(network.layers)-1):
-    network.layers[i].weights = np.add(network.layers[i].weights, weight_deltas[i])
+    network.layers[i+1].weights = np.add(network.layers[i+1].weights, weight_deltas[i])
     network.layers[i+1].biases = np.add(network.layers[i+1].biases, biases_deltas[i])
+
 
 
   
 
 network = Neural_network([2, 2, 1])
 
-print([[1], [1]])
 
-
-
-#print(output([1, 1], network))
-
-
-#print(error([1, 1], network, [[1]]))
-training_set = [[[0, 0], [[0]]], [[1, 1], [[0]]], [[0, 1], [[1]]], [[1, 0], [[1]]]]
+training_set = [[np.array([[1], [1]]), [[0]]], [np.array([[0], [0]]), [[0]]], [np.array([[0], [1]]), [[1]]], [np.array([[1], [0]]), [[1]]]]
 choice = random.choice(training_set)
-for i in range(10000):
+for i in range(50000):
   choice = random.choice(training_set)
   train(choice[0], network, choice[1])
 
+ 
 
-print(output([0, 0]), network)
-print(output([1, 1]), network)
-print(output([0, 1]), network)
-print(output([1, 0]), network)
+network.display()
+print(output(np.array([[1], [1]]), network))
+print(output(np.array([[0], [0]]), network))
+print(output(np.array([[0], [1]]), network))
+print(output(np.array([[1], [0]]), network))
 
 
 
