@@ -28,7 +28,7 @@ class Neural_network:
   
   def display(self):
     for i in range(len(self.layers)):
-      print(self.layers[i].weights, self.layers[i].values)
+      print(self.layers[i].weights, self.layers[i].values, self.layers[i].biases)
 
 
 
@@ -60,7 +60,7 @@ def output(input, network):
 def error(input, network, wanted_output):
   errors = []
   output_result = output(input, network)
-  error = np.subtract(output_result, wanted_output)
+  error = np.subtract(wanted_output, output_result))
   errors.append(error)
   for i in range(1, len(network.layers)-1):
     error = np.dot(network.layers[len(network.layers)-i].weights.transpose(), error)
@@ -97,15 +97,15 @@ def train(input, network, wanted_output):
 network = Neural_network([2, 2, 1])
 
 
+
+
 training_set = [[np.array([[1], [1]]), [[0]]], [np.array([[0], [0]]), [[0]]], [np.array([[0], [1]]), [[1]]], [np.array([[1], [0]]), [[1]]]]
 choice = random.choice(training_set)
 for i in range(50000):
   choice = random.choice(training_set)
   train(choice[0], network, choice[1])
 
- 
 
-network.display()
 print(output(np.array([[1], [1]]), network))
 print(output(np.array([[0], [0]]), network))
 print(output(np.array([[0], [1]]), network))
