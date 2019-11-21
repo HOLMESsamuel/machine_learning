@@ -32,7 +32,7 @@ class Neural_network:
     for i in range(len(self.layers)):
       print(self.layers[i].weights, self.layers[i].values, self.layers[i].biases)
   
-  def draw_neural_network(self, left, right, bottom, top):
+  def draw(self, left, right, bottom, top):
     '''
     :parameters:
         - left : float
@@ -143,7 +143,7 @@ for i in range(50000):
   choice = random.choice(training_set)
   train(choice[0], network, choice[1])
 
-network.draw_neural_network(.1, .9, .1, .9)
+network.draw(.1, .9, .1, .9)
 print(output(np.array([[1], [1]]), network))
 print(output(np.array([[0], [0]]), network))
 print(output(np.array([[0], [1]]), network))
