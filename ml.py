@@ -50,22 +50,59 @@ class Neural_network:
     n_layers = len(self.dimensions)
     v_spacing = (top - bottom)/float(max(self.dimensions))
     h_spacing = (right - left)/float(len(self.dimensions) - 1)
+    # Input-Arrows
+    layer_top_0 = v_spacing*(self.dimensions[0] - 1)/2. + (top + bottom)/2.
+    for m in range(self.dimensions[0]):
+      plt.arrow(left-0.1, layer_top_0 - m*v_spacing, 0.12, 0,  lw =1, head_width=0.01, head_length=0.02)   
     # Nodes
     for n, layer_size in enumerate(self.dimensions):
         layer_top = v_spacing*(layer_size - 1)/2. + (top + bottom)/2.
-        for m in xrange(layer_size):
+        for m in range(layer_size):
             circle = plt.Circle((n*h_spacing + left, layer_top - m*v_spacing), v_spacing/4.,
                                 color='w', ec='k', zorder=4)
+            ax.add_artist(circle)
+    # Add texts
+            if n == 0:
+                plt.text(left-0.14, layer_top - m*v_spacing, r'$X_{'+str(m+1)+'}$', fontsize=18)
+            elif (n_layers == 3) & (n == 1):
+                plt.text(n*h_spacing + left+0.00, layer_top - m*v_spacing+ (v_spacing/8.+0.01*v_spacing), r'$H_{'+str(m+1)+'}$', fontsize=15)
+            elif n == n_layers -1:
+                plt.text(n*h_spacing + left+0.10, layer_top - m*v_spacing, r'$Y_{'+str(m+1)+'}$', fontsize=18)
             ax.add_artist(circle)
     # Edges
     for n, (layer_size_a, layer_size_b) in enumerate(zip(self.dimensions[:-1], self.dimensions[1:])):
         layer_top_a = v_spacing*(layer_size_a - 1)/2. + (top + bottom)/2.
         layer_top_b = v_spacing*(layer_size_b - 1)/2. + (top + bottom)/2.
-        for m in xrange(layer_size_a):
-            for o in xrange(layer_size_b):
+        for m in range(layer_size_a):
+            for o in range(layer_size_b):
                 line = plt.Line2D([n*h_spacing + left, (n + 1)*h_spacing + left],
                                   [layer_top_a - m*v_spacing, layer_top_b - o*v_spacing], c='k')
                 ax.add_artist(line)
+                xm = (n*h_spacing + left)
+                xo = ((n + 1)*h_spacing + left)
+                ym = (layer_top_a - m*v_spacing)
+                yo = (layer_top_b - o*v_spacing)
+                rot_mo_rad = np.arctan((yo-ym)/(xo-xm))
+                rot_mo_deg = rot_mo_rad*180./np.pi
+                xm1 = xm + (v_spacing/8.+0.05)*np.cos(rot_mo_rad)
+                if n == 0:
+                    if yo > ym:
+                        ym1 = ym + (v_spacing/8.+0.12)*np.sin(rot_mo_rad)
+                    else:
+                        ym1 = ym + (v_spacing/8.+0.05)*np.sin(rot_mo_rad)
+                else:
+                    if yo > ym:
+                        ym1 = ym + (v_spacing/8.+0.12)*np.sin(rot_mo_rad)
+                    else:
+                        ym1 = ym + (v_spacing/8.+0.04)*np.sin(rot_mo_rad)
+                plt.text( xm1, ym1,\
+                        str(round(5.345)),\
+                        rotation = rot_mo_deg, \
+                        fontsize = 10)
+    # Output-Arrows
+    layer_top_0 = v_spacing*(self.dimensions[-1] - 1)/2. + (top + bottom)/2.
+    for m in range(self.dimensions[-1]):
+      plt.arrow(right+0.015, layer_top_0 - m*v_spacing, 0.16*h_spacing, 0,  lw =1, head_width=0.01, head_length=0.02)
     fig.savefig('nn.png')
 
 
@@ -132,22 +169,21 @@ def train(input, network, wanted_output):
 
   
 
-network = Neural_network([2, 4, 1])
+network = Neural_network([2, 2, 1])
 
 
 
 
 training_set = [[np.array([[1], [1]]), [[0]]], [np.array([[0], [0]]), [[0]]], [np.array([[0], [1]]), [[1]]], [np.array([[1], [0]]), [[1]]]]
-choice = random.choice(training_set)
-for i in range(50000):
-  choice = random.choice(training_set)
-  train(choice[0], network, choice[1])
+#for i in range(50000):
+  #choice = random.choice(training_set)
+  #train(choice[0], network, choice[1])
 
 network.draw(.1, .9, .1, .9)
-print(output(np.array([[1], [1]]), network))
-print(output(np.array([[0], [0]]), network))
-print(output(np.array([[0], [1]]), network))
-print(output(np.array([[1], [0]]), network))
+#print(output(np.array([[1], [1]]), network))
+#print(output(np.array([[0], [0]]), network))
+#print(output(np.array([[0], [1]]), network))
+#print(output(np.array([[1], [0]]), network))
 
 
 
