@@ -61,6 +61,10 @@ class Neural_network:
             circle = plt.Circle((n*h_spacing + left, layer_top - m*v_spacing), v_spacing/4.,
                                 color='w', ec='k', zorder=4)
             ax.add_artist(circle)
+            if n!=0:
+              plt.text( n*h_spacing + left, layer_top - m*v_spacing,\
+                        str(round(0.598)),\
+                        fontsize = 10)
     # Add texts
             if n == 0:
                 plt.text(left-0.14, layer_top - m*v_spacing, r'$X_{'+str(m+1)+'}$', fontsize=18)
@@ -96,7 +100,7 @@ class Neural_network:
                     else:
                         ym1 = ym + (v_spacing/8.+0.04)*np.sin(rot_mo_rad)
                 plt.text( xm1, ym1,\
-                        str(round(5.345)),\
+                        str(round(self.layers[n+1].weights[o][m])),\
                         rotation = rot_mo_deg, \
                         fontsize = 10)
     # Output-Arrows
@@ -169,15 +173,15 @@ def train(input, network, wanted_output):
 
   
 
-network = Neural_network([2, 2, 1])
+network = Neural_network([2, 4, 1])
 
 
 
 
 training_set = [[np.array([[1], [1]]), [[0]]], [np.array([[0], [0]]), [[0]]], [np.array([[0], [1]]), [[1]]], [np.array([[1], [0]]), [[1]]]]
-#for i in range(50000):
-  #choice = random.choice(training_set)
-  #train(choice[0], network, choice[1])
+for i in range(50000):
+  choice = random.choice(training_set)
+  train(choice[0], network, choice[1])
 
 network.draw(.1, .9, .1, .9)
 #print(output(np.array([[1], [1]]), network))
